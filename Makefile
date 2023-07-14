@@ -31,13 +31,13 @@ distclean: clean
 
 .PHONY: lint
 lint: validate-go-version
-	GO111MODULE=on $(GOLANGCILINT) run
+	GO111MODULE=on $(GOLANGCILINT) run --timeout 10m0s
 
 .PHONY: build
 build: validate-go-version clean $(BINARY)
 
 $(BINARY):
-	CGO_ENABLED=0 $(GO) build -a -installsuffix cgo -ldflags="-X main.VERSION=${VERSION}" -o $@ github.com/oauth2-proxy/oauth2-proxy/v7
+	CGO_ENABLED=0 $(GO) build -gcflags="all=-N -l" -a -installsuffix cgo -ldflags="-X main.VERSION=${VERSION}" -o $@ github.com/oauth2-proxy/oauth2-proxy/v7
 
 DOCKER_BUILD_PLATFORM ?= linux/amd64,linux/arm64,linux/ppc64le,linux/arm/v6,linux/arm64/v8
 DOCKER_BUILD_RUNTIME_IMAGE ?= alpine:3.15
